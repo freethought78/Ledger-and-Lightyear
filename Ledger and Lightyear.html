@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ledger and Lightyear Rulebook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+.game-title {
+    font-family: 'Michroma', sans-serif;
+    font-size: clamp(24px, 8vw, 72px);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    margin: 40px 0;
+    color: #FF8829;
+    text-shadow: 3px 3px 0px #000, 0 0 10px rgba(0, 242, 255, 0.8), 0 0 30px rgba(100, 200, 100, 0.8);
+    animation: light-flicker 10s infinite;
+    animation-delay: -4s;	
+}
+
+.game-subtitle {
+    font-family: 'Russo One', sans-serif;
+    font-size: clamp(20px, 5vw, 40px);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-top: -20px;
+    margin-bottom: 40px;
+    color: #FF6629;
+    text-shadow: 3px 3px 0px #000, 0 0 10px rgba(0, 242, 255, 0.8), 0 0 30px rgba(100, 200, 100, 0.8);
+    animation: light-flicker 10s infinite;
+    animation-delay: -2s;	
+}
+
+@keyframes light-flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.8; text-shadow: none; }
+}
+
+body {
+    text-shadow: 3px 3px 0px #000, 0 0 5px rgba(0, 242, 255, 0.8), 0 0 30px currentcolor;
+    font-family: 'Orbitron', sans-serif;
+	font-size: clamp(14px, 1.5vw + 10px, 20px);
+    line-height: 1.6;
+    margin: 0;
+    padding: 10px;
+    color: #e0e0e0;
+    background-color: #0f0f0f;
+	background-image: 
+		linear-gradient(transparent 0%, rgba(255, 0, 127, 0.2) 2%, transparent 5%),
+		linear-gradient(90deg, transparent 0%, rgba(255, 0, 127, 0.2) 2%, transparent 5%),
+		radial-gradient(circle at top, rgba(255, 0, 127, 0.2) 0%, transparent 70%);
+	background-size: 50px 50px, 50px 50px, 100% 100%;
+	background-position: center bottom;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p {
+	margin-left: 30px;
+}
+
+.content-wrapper {
+    width: 90%;
+    max-width: 1600px; 
+    box-sizing: border-box;
+}
+
+/* Mobile override for width */
+@media (max-width: 600px) {
+    .content-wrapper {
+        width: 95%;
+    }
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+    background-size: 100% 4px, 3px 100%;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.section {
+    display: flow-root;
+    position: relative;
+    margin: 60px 0;
+    padding: 25px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.section::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 20px; height: 20px;
+    border-top: 4px solid currentColor;
+    border-left: 4px solid currentColor;
+    pointer-events: none;
+}
+
+.section::after {
+    content: "";
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 20px; height: 20px;
+    border-bottom: 4px solid currentColor;
+    border-right: 4px solid currentColor;
+    pointer-events: none;
+}
+
+.section::first-line {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 0 0 8px #000;
+}
+
+.Requirements { background-color: #2c3e50; color: #b0bec5; } 
+.Preparation  { background-color: #1a237e; color: #bbdefb; } 
+.Facilities   { background-color: #311b92; color: #d1c4e9; } 
+.Actions      { background-color: #4e342e; color: #ffe082; } 
+.Ships        { background-color: #0d47a1; color: #e3f2fd; }
+.Technologies { background-color: #1b5e20; color: #f1f8e9; }
+.Resources    { background-color: #99360c; color: #fff3e0; }
+.Exploration  { background-color: #006064; color: #e0f7fa; }
+.Legend       { background-color: #37474f; color: #eceff1; }
+.Tokens       { background-color: #263238; color: #ffccbc; }
+.Ledgers      { background-color: #1A1A1A; color: #FFB300; }
+
+.subheader {
+    font-family: 'Russo One', sans-serif;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    text-shadow: 0 0 4px currentColor;
+    margin-left: 10px;
+}
+
+.sub2 {
+    text-shadow: 0 0 4px #000;
+    font-size: 1em;
+    font-weight: normal;
+    margin-left: 20px;
+}
+
+@media (min-width: 600px) {
+    .subheader { margin-left: 20px; }
+    .sub2 { margin-left: 80px; }
+}
+
+svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+}
+
+@media print {
+    body { background: white !important; color: black !important; text-shadow: none !important; }
+    body::before { display: none; }
+    .section {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+        background-color: transparent !important;
+        color: black !important;
+        margin: 10px 0;
+    }
+    .subheader, .sub2 { 
+        color: black !important; 
+        text-shadow: none !important; 
+        margin-left: 0 !important; 
+    }
+    svg { filter: invert(1); }
+    .content-wrapper { width: 100%; max-width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<body>
+<div class="content-wrapper">
+
+<h1 class="game-title">LEDGER AND LIGHTYEAR</h1>
+<h2 class="game-subtitle">Game System Rulebook</h2>
+
+<div class="section Requirements">
+    <strong>Requirements:</strong>
+    <p><strong>These rules:</strong> For reference during play.</p>
+    <p><strong>Paper:</strong> Notebook, hex grid, or blank paper.</p>
+    <p><strong>Pencil with an eraser:</strong> Required for updating ledger values and map details.</p>
+    <p><strong>Scissors:</strong> Used for crafting ship tokens.</p>
+    <p><strong>One 20-sided die (D20):</strong> To determine the outcome of exploration, mining, and combat.</p>
+</div>
+
+
+<div class="section Preparation">Game Preparation:
+    <div class="subheader">The 'Brick Style' Grid:</div>
+    <p>You don’t need to draw a perfect hex grid. Instead, draw squares in a staggered "brick" pattern. This functions identically to a hex grid and accommodates square tokens more easily. The blue lines in the diagram below illustrate the six degrees of movement; <strong>do not draw these on your map.</strong></p>
+
+    <svg width="100%" height="auto" viewBox="0 0 140 140" style="max-width: 400px; display: block; margin: 20px auto;" xmlns="http://www.w3.org/2000/svg">
+        <rect width="220" height="120" fill="#1a1a1a" />
+        <g transform="translate(10, 10)">
+            <g fill="#FFF" stroke="#000" stroke-width="1">
+                <rect x="10" y="0" width="20" height="20" /> 
+                <rect x="30" y="0" width="20" height="20" /> 
+                <rect x="50" y="0" width="20" height="20" /> 
+                <rect x="70" y="0" width="20" height="20" /> 
+                <rect x="90" y="0" width="20" height="20" /> 
+                <rect x="20" y="20" width="20" height="20" /> 
+                <rect x="40" y="20" width="20" height="20" fill="#F00"/> 
+                <rect x="60" y="20" width="20" height="20" fill="#F00"/> 
+                <rect x="80" y="20" width="20" height="20" /> 
+                <rect x="10" y="40" width="20" height="20" /> 
+                <rect x="30" y="40" width="20" height="20" fill="#F00"/> 
+                <rect x="50" y="40" width="20" height="20" fill="#F00"/> 
+                <rect x="70" y="40" width="20" height="20" fill="#F00"/> 
+                <rect x="90" y="40" width="20" height="20" /> 
+                <rect x="20" y="60" width="20" height="20" /> 
+                <rect x="40" y="60" width="20" height="20" fill="#F00"/> 
+                <rect x="60" y="60" width="20" height="20" fill="#F00"/> 
+                <rect x="80" y="60" width="20" height="20" /> 
+                <rect x="10" y="80" width="20" height="20" /> 
+                <rect x="30" y="80" width="20" height="20" /> 
+                <rect x="50" y="80" width="20" height="20" /> 
+                <rect x="70" y="80" width="20" height="20" /> 
+                <rect x="90" y="80" width="20" height="20" /> 
+                <g stroke="#00F" opacity="0.3">
+                    <line x1="20" y1="10" x2="60" y2="90"/>
+                    <line x1="40" y1="10" x2="80" y2="90"/>
+                    <line x1="60" y1="10" x2="100" y2="90"/>
+                    <line x1="100" y1="10" x2="60" y2="90"/>
+                    <line x1="80" y1="10" x2="40" y2="90"/>
+                    <line x1="60" y1="10" x2="20" y2="90"/>
+                    <line x1="30" y1="30" x2="90" y2="30"/>
+                    <line x1="20" y1="50" x2="100" y2="50"/>
+                    <line x1="30" y1="70" x2="90" y2="70"/>
+                </g>
+            </g>
+            <text x="60" y="108" fill="#88F" font-family="Arial" font-size="8" text-anchor="middle">Brick-Style Hex Grid</text>
+        </g>
+    </svg>
+
+    <p>You can draw map cells as they are discovered. Ensure all players agree on the total map dimensions before play begins. On pre-drawn grids, an <strong>X</strong> denotes explored empty space; blank cells are considered unexplored.</p>
+
+    <div class="subheader">Map Size and Orientation:</div>
+    <p>For your first game, a grid 11 cells high and 10–11 cells wide is recommended.</p>
+    <ul>
+        <li>In a staggered grid, width alternates: an odd number for height (e.g., 11) ensures the top and bottom rows match in width.</li>
+        <li>Rows 11 cells wide have a single center cell; rows 10 cells wide have two.</li>
+    </ul>
+
+    <div class="subheader">Home Star and Planet Placement:</div>
+    <p><strong>Home Star:</strong> Place your star in the center cell of your closest row. Represent it with a large, filled-in dot.</p>
+    <p><strong>Home Planet:</strong> Place a large circle in any map cell adjacent to your home star.</p>
+    <ul>
+        <li>Ensure there is room inside the circle to write an <strong>R</strong> (Research) and an <strong>S</strong> (Shipyard).</li>
+        <li>The home planet begins with both facilities already built.</li>
+        <li>Assign a unique Letter or Symbol as your Faction Identifier and place it in the top-left corner of the cell.</li>
+        <li>Record the planet in the Planetary Ledger with a unique ID number.</li>
+    </ul>
+
+    <div class="subheader">Victory Conditions:</div>
+    <p><strong>Elimination Rule:</strong> In every game, a player is eliminated if their home planet is depopulated via bombardment. The last player remaining wins. Additionally, players may agree on these optional objectives:</p>
+    <ul>
+        <li><strong>Industrial:</strong> Construct a Victory Monument (500 Ore).</li>
+        <li><strong>Technological:</strong> Reach Level 30 in "Stellar Dominance."</li>
+        <li><strong>Military:</strong> Accumulate 50 points by destroying enemy assets (Small ship = 1pt, Medium = 2pt, Large = 3pt, Facility = 4pt, Depopulating a planet = 5pt).</li>
+    </ul>
+
+    <div class="subheader">Starting Setup:</div>
+    <p><strong>Resources:</strong> Start with 20 points. Assign these to your home planet as any mix of Ore or Crystal (1 point = 1 unit).</p>
+    <p><strong>Starting Scout:</strong> Each player receives one Scout (ID: 1, HP: 5). Tech levels: Cargo 1, Loading 1, Warp 1, Weapon 1. Place its token on your home planet.</p>
+
+    <div class="subheader">Begin Play:</div>
+    <p>Select a starting player and proceed clockwise. On your turn, take a number of actions equal to your faction's current <strong>Command Level</strong>.</p>
+</div>
+
+<div class="section Ledgers">Ledgers:
+    <div class="subheader">Planetary Ledger:</div>
+    <p>This is a shared document used by all players to track resources across the galaxy. Each planet is assigned a <strong>Unique ID number</strong> as it is discovered or added to the map. No two planets may share an ID.</p>
+    
+    <p>On the map, write the ID number in the upper-right corner of the planet's cell. In the ledger, create an entry for each planet with its ID, Owner, and current Ore/Crystal counts.</p>
+
+    <div class="subheader">Faction and Fleet Ledger:</div>
+    <p>Each player maintains their own <strong>Personal Ledger</strong>. Your faction begins with <strong>Level 1</strong> in every technology. List these at the top of your sheet for easy reference when researching upgrades.</p>
+    
+    <div class="subheader">Organizing Your Fleet:</div>
+    <p>To keep the game moving, <strong>create a separate section on your paper for each Ship Type</strong> (Scouts, Haulers, etc.). Ship IDs are unique <strong>only within their own type</strong> (e.g., Scout 1, Hauler 1).</p>
+    
+    <p><strong>Recording Stats:</strong> For every ship, write the <strong>Base Tech Level</strong> followed by the <strong>(Effective Value)</strong> in parentheses. The Effective Value is the actual number used during play after weight class and resource multipliers are applied.</p>
+    
+    <blockquote>
+        <strong>Example:</strong> A Hauler with 2 points in Cargo Capacity would be recorded as <strong>Cargo: 2 (40)</strong>. 
+        <br><em>Calculation: 2 points x 2 (Hauler Multiplier) x 10 (Standard Cargo Units) = 40 total units.</em>
+    </blockquote>
+
+    <p><strong>New ships start with 5 Hull Points and Level 1 Warp Speed.</strong> All other tech starts at Level 0. Record the following for each new ship:</p>
+    
+    <ul>
+        <li><strong>Ship ID:</strong> (The next available number for this specific type)</li>
+        <li><strong>Hull Points:</strong> 5</li>
+        <li><strong>Warp Speed:</strong> 1 (Effective value based on size)</li>
+        <li><strong>Cargo Capacity:</strong> 0 (Effective total units based on size)</li>
+        <li><strong>Loading Speed:</strong> 0 (Effective total units based on size)</li>
+        <li><strong>Weapon Strength:</strong> 0 (Effective damage limit based on size)</li>
+        <li><strong>Loaded Ore/Crystal:</strong> 0 (Current inventory)</li>
+    </ul>
+
+    <p><strong>Specialized Ship Subsystems:</strong></p>
+    <ul>
+        <li><strong>Fighters (Light/Heavy):</strong> Must also include entries for <strong>Shield Capacity (Max)</strong>, <strong>Shield Regeneration</strong>, and <strong>Current Shield Charges</strong>.</li>
+        <li><strong>Planetary Assault Ships:</strong> Must include an entry for <strong>Bombardment Effectiveness</strong>.</li>
+    </ul>
+    
+    <p>Ensure you leave enough room to cross out or update these values as ships are upgraded, damaged, or loaded with resources.</p>
+</div>
+
+
+<div class="section Ships">Ship Types:
+    <p>Ships are categorized into three weight classes: <strong>Small, Medium, and Large</strong>. Each class modifies a ship's performance. Within each class, there are two specialized ship types.</p>
+    
+    <div class="subheader">Bookkeeping Tip:</div>
+    <p>When recording ship stats, write the base tech level followed by the modified value in parentheses—for example, a Small ship with Warp 3 would be recorded as <strong>Warp: 3 (6)</strong>. This makes it easy to calculate upgrade costs while keeping the final value ready for quick reference.</p>
+    <p>For Fighters, ensure you leave distinct spaces for <strong>Current Shield Level</strong>, <strong>Maximum Shield Capacity</strong>, and <strong>Regeneration Rate</strong>. Tracking these separately is vital during the heat of combat.</p>
+
+    <div class="subheader">Small Weight Class:</div>
+    <ul>
+        <li><strong>Range:</strong> 2x Warp Speed</li>
+        <li><strong>Cargo Capacity:</strong> 0.5x CC Rating (Round Up)</li>
+        <li><strong>Hull Point Cost:</strong> 1 Ore per HP</li>
+        <li><strong>Max Hull Points:</strong> 10 HP</li>
+        <li><strong>Damage Limit:</strong> 0.5x Weapon Tech (Round Up)</li>
+    </ul>
+
+    <div class="subheader sub2">Scout (S)</div>
+    <p>The only ship capable of the <strong>Explore New Sectors</strong> action to expand the map.</p>
+    
+    <div class="subheader sub2">Light Fighter (LF)</div>
+    <p>Fighters utilize <strong>Shield Technologies</strong>:</p>
+    <ul>
+        <li><strong>Max Shields:</strong> 1x Shield Capacity Tech.</li>
+        <li><strong>Regeneration:</strong> 1x multiplier when using the Regenerate Shields action.</li>
+    </ul>
+
+    <div class="subheader">Medium Weight Class:</div>
+    <ul>
+        <li><strong>Range:</strong> 1x Warp Speed</li>
+        <li><strong>Cargo Capacity:</strong> 1x CC Rating</li>
+        <li><strong>Hull Point Cost:</strong> 2 Ore per HP</li>
+        <li><strong>Max Hull Points:</strong> 20 HP</li>
+        <li><strong>Damage Limit:</strong> 1x Weapon Tech</li>
+    </ul>
+
+    <div class="subheader sub2">Hauler (H)</div>
+    <p>Twice as efficient at logistics: <strong>2x Cargo Capacity</strong> and <strong>2x Loading Speed</strong>.</p>
+    
+    <div class="subheader sub2">Heavy Fighter (HF)</div>
+    <p>Fighters utilize <strong>Shield Technologies</strong>:</p>
+    <ul>
+        <li><strong>Max Shields:</strong> 2x Shield Capacity Tech.</li>
+        <li><strong>Regeneration:</strong> 2x multiplier when using the Regenerate Shields action.</li>
+    </ul>
+
+    <div class="subheader">Large Weight Class:</div>
+    <ul>
+        <li><strong>Range:</strong> 0.5x Warp Speed (Round Up)</li>
+        <li><strong>Cargo Capacity:</strong> 1x CC Rating</li>
+        <li><strong>Hull Point Cost:</strong> 3 Ore per HP</li>
+        <li><strong>Max Hull Points:</strong> 30 HP</li>
+        <li><strong>Damage Limit:</strong> 2x Weapon Tech</li>
+    </ul>
+
+    <div class="subheader sub2">Colony Ship (C)</div>
+    <p>Necessary for the <strong>Colonize Planet</strong> action to expand your faction's territory.</p>
+    
+    <div class="subheader sub2">Planetary Assault Ship (PA)</div>
+    <p>Capable of destroying planetary facilities (Research Colonies and Shipyards) or wiping out populations via the <strong>Bombard Planet</strong> action.</p>
+</div>
+
+<div class="section Tokens">Token Construction:
+    <div class="subheader">Materials:</div>
+    <p>Tokens can be crafted from any available scrap, such as cereal boxes or shipping cardboard. If using standard paper, ensure the squares fit within your map cells while leaving enough room for markings.</p>
+        
+    <div class="subheader sub2">The L-Flap Method:</div>
+    <p>To create a durable, multi-layered token from standard paper:</p>
+    <ul>
+        <li>Draw or visualize an "L" shape 4 units long (see diagram).</li>
+        <li>Fold the long section over itself repeatedly to create a thick body with a "pocket."</li>
+        <li>Tuck the shorter flap into the pocket to lock the shape, then press flat.</li>
+    </ul>
+
+    <svg width="100%" height="auto" viewBox="0 0 120 65" style="max-width: 400px; display: block; margin: 20px auto;" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="120" fill="#1a1a1a" />
+      <g transform="translate(10, 10)">
+        <g fill="#F00" stroke="#000" stroke-width="1">
+          <rect x="0" y="0" width="20" height="20" /> 
+          <rect x="20" y="0" width="20" height="20" /> 
+          <rect x="40" y="0" width="20" height="20" /> 
+          <rect x="60" y="0" width="20" height="20" /> 
+          <rect x="0" y="20" width="20" height="20" /> 
+        </g>
+        <g fill="#00F" stroke="#000" stroke-width="1">
+          <rect x="20" y="20" width="20" height="20" /> 
+          <rect x="40" y="20" width="20" height="20" /> 
+          <rect x="60" y="20" width="20" height="20" /> 
+          <rect x="80" y="20" width="20" height="20" /> 
+          <rect x="80" y="0" width="20" height="20" /> 
+        </g>
+        <text x="50" y="50" fill="#888" font-family="Arial" font-size="8" text-anchor="middle">Pair of L-Flap Shapes</text>
+      </g>
+    </svg>
+
+    <div class="subheader">Markings:</div>
+    <p>Every token must display three distinct pieces of information so they can be easily identified during play:</p>
+
+    <div class="subheader sub2">Class Symbol:</div>
+    <p>Draw a rectangle that takes up the entire bottom half of the token. Write the abbreviated ship class (e.g., <strong>S</strong> for Scout, <strong>HF</strong> for Heavy Fighter) inside this rectangle. This visual border prevents class initials from being confused with other markings.</p>
+            
+    <div class="subheader sub2">Faction and ID Placement:</div>
+    <p>Use the two top corners for the remaining identifiers:</p>
+    <ul>
+        <li><strong>Top-Left Corner:</strong> Draw your unique faction symbol.</li>
+        <li><strong>Top-Right Corner:</strong> Write the ship’s ID number.</li>
+    </ul>
+    <p>Remember: IDs are unique only to that <strong>Class</strong> within your <strong>Faction</strong> (e.g., Scout 1, Hauler 1).</p>
+            
+    <div class="subheader sub2">Update Ledgers:</div>
+    <p>Once a ship is constructed, immediately record it in your <strong>Fleet Ledger</strong> and update the <strong>Planetary Ledger</strong> to reflect the resources spent. Note that constructing a new ship requires the standard Ore for its Hull Points plus <strong>1 Crystal</strong> to provide its mandatory starting level of Warp Speed.</p>
+</div>
+
+<div class="section Technologies">Technologies:
+    <p>At the start of the game, each faction begins with <strong>Level 1</strong> in every technology. One technology can be researched per action if enough crystals are present at a Research Facility. (See the <strong>Research a Technology</strong> action).</p>
+    
+    <div class="subheader">Faction Technology:</div>
+    <div class="subheader sub2">Command Level</div>
+    <p>This determines the total number of actions you may take per turn. While it is researched like other techs, it affects your entire faction and is never assigned to individual ships. Note: When upgraded, the additional action point does not become available until your next turn.</p>
+
+    <div class="subheader">Ship Technologies:</div>
+    <p>While tech levels are researched for the entire faction, ships do not automatically upgrade. To benefit from higher tech levels, ships must be built or refitted with those points. (See the <strong>Construct, Refit, or Repair a Ship</strong> action).</p>
+    
+    <p>Certain technologies are restricted to specific ship classes: <strong>Shields</strong> are exclusive to Fighters (Light/Heavy), and <strong>Bombardment Effectiveness</strong> is exclusive to Planetary Assault ships.</p>
+            
+    <ul>
+        <li><strong>Warp Speed:</strong> Determines the maximum distance a ship can travel in a straight line during a single <strong>Move</strong> action, modified by weight class:
+            <ul>
+                <li><strong>Small:</strong> 2x Warp Speed.</li>
+                <li><strong>Medium:</strong> 1x Warp Speed.</li>
+                <li><strong>Large:</strong> 0.5x Warp Speed (Round Up).</li>
+            </ul>
+        </li>
+        <li><strong>Cargo Capacity:</strong> Each point allows a ship to carry up to 10 units of goods (Ore or Crystal).</li>
+        <li><strong>Loading Speed:</strong> The number of goods a ship can mine, load, or transfer during a single action.</li>
+        <li><strong>Weapon Power:</strong> Determines the maximum potential damage a ship can deal during an <strong>Attack</strong> action, modified by weight class:
+            <ul>
+                <li><strong>Small:</strong> 0.5x Weapon Power (Round Up).</li>
+                <li><strong>Medium:</strong> 1x Weapon Power.</li>
+                <li><strong>Large:</strong> 2x Weapon Power.</li>
+                <li><em>Note: All attacks require a d20 roll, which also acts as a limit on damage. See <strong>Attack a Ship</strong>.</em></li>
+            </ul>
+        </li>
+        <li><strong>Shield Capacity:</strong> (Fighters Only). Shields block one damage per charge. This tech determines the maximum charges a ship can hold.</li>
+        <li><strong>Shield Regeneration Rate:</strong> (Fighters Only). Determines the maximum number of charges a shield can recover during a single <strong>Regenerate Shields</strong> action.</li>
+        <li><strong>Bombardment Effectiveness:</strong> (PA Only). Increases the success rate of the <strong>Bombard a Planet</strong> action.</li>
+    </ul>
+</div>
+
+
+<div class="section Resources">Resources:
+    <p><strong>Ore:</strong> Used to construct ships and planetary facilities.</p>
+    <p><strong>Crystal:</strong> Used to research technologies and fit ships with technology levels.</p>
+</div>
+
+<div class="section Facilities">Planetary Facilities:
+    <div class="subheader">Shipyard</div>
+    <p>Allows construction, refit, or repair of ships if enough Ore and Crystal are present.</p>
+    
+    <div class="subheader">Research Facility</div>
+    <p>Allows factionwide technology levels to be increased if enough Crystal is present.</p>
+</div>
+
+
+<div class="section Actions">Actions:
+    <div class="subheader">Move a Ship:</div>
+    <p>Ships move in a straight line once per action based on their Weight Class and Warp Speed level:</p>
+    <ul>
+        <li><strong>Small:</strong> 2x Warp Speed.</li>
+        <li><strong>Medium:</strong> 1x Warp Speed.</li>
+        <li><strong>Large:</strong> 0.5x Warp Speed (Round Up).</li>
+    </ul>
+    <p><strong>Movement Rules:</strong></p>
+    <ul>
+        <li>Only one ship may occupy a hex at a time. Ships may not pass through or end movement on a star or another ship.</li>
+        <li>Entering an asteroid field or a planet ends the move action immediately; you cannot pass through these cells without stopping.</li>
+        <li>Ships may not move onto planets controlled by other players.</li>
+        <li>Only Scouts may move into unexplored space. No ship may move through unexplored space, even if the destination is explored.</li>
+    </ul>
+    <p>Each individual ship is limited to <strong>one move action per turn</strong>. Ships may take as many non-movement actions as your Faction's Command Level allows.</p>
+        
+    <div class="subheader">Explore a New Sector (Scouts Only):</div>
+    <p>Exploration is part of a Scout’s move action and does not cost an additional action. The unexplored cell must share at least 2 borders with explored space.</p>
+    <p>Roll a <strong>d20</strong> and consult the <strong>Space Exploration Chart</strong>. If a star is revealed, the Scout "bounces" one space into previously explored space. This extra movement is free and occurs even if the Scout has exhausted its warp range.</p>
+        
+    <div class="subheader">Mine or Transfer Resources:</div>
+    <ul>
+        <li><strong>Mining:</strong> While in an asteroid field, roll a <strong>d20</strong>. Your yield is the lower value between the die roll and your Loading Speed. If you roll a <strong>20</strong>, the field is depleted and becomes empty space after you collect your resources.</li>
+        <li><strong>Transferring:</strong> You may move any combination of Ore or Crystal between a ship and a planet, or between two ships.
+            <ul>
+                <li>To transfer with a <strong>planet</strong>, the ship must be on that planet's map cell.</li>
+                <li>To transfer with <strong>another ship</strong>, the ships must be adjacent. Use the lower Loading Speed of the two ships.</li>
+                <li><strong>Permissions:</strong> You may transfer to/from your own planets, unpopulated planets, or your own ships. You cannot transfer with enemy ships or planets.</li>
+                <li><strong>Action Limit:</strong> The total number of goods moved in a single action cannot exceed the ship's Loading Speed.</li>
+            </ul>
+        </li>
+    </ul>
+        
+    <div class="subheader">Construct or Repair a Ship:</div>
+    <p>Performed at a Shipyard. Construction and repairs consume Ore from the planet’s stores and require the Shipyard cell to be clear of other ships.</p>
+    <ul>
+        <li><strong>Construction:</strong> Every new ship starts with <strong>exactly 5 Hull Points</strong> and 1 Warp Speed. This costs <strong>1 Crystal</strong> and a specific amount of Ore based on size (Small: 1/HP, Medium: 2/HP, Large: 3/HP).</li>
+        <li><strong>Repair:</strong> Costs the same Ore-per-HP rate as construction. If a ship is below 5 HP, one action must be used specifically to bring it back to exactly 5 HP. You cannot repair a ship from below 5 HP to a value higher than 5 in a single action.</li>
+    </ul>
+    <p>Update the <strong>Fleet Ledger</strong>, deduct resources from the <strong>Planetary Ledger</strong>, and place a new token on the Shipyard.</p>
+            
+    <div class="subheader">Upgrade a Ship's Technologies:</div>
+    <p>Performed at a Shipyard. You may upgrade <strong>one technology</strong> per action. You must pay Crystal equal to the <strong>Full Target Value</strong> of the new rank (not the difference).</p>
+    <p><strong>Example:</strong> Upgrading a ship from Loading Speed 2 to Level 5 costs <strong>5 Crystals</strong>.</p>
+        
+    <div class="subheader">Construct a Facility:</div>
+    <p>If you own a planet with at least 10 Ore and 10 Crystal, you may spend those resources to build a Shipyard (marked <strong>S</strong>) or a Research Facility (marked <strong>R</strong>). Each requires its own action.</p>
+        
+    <div class="subheader">Research a Technology:</div>
+    <p>Increases a faction-wide technology level by 1. Requires a Research Facility and Crystals equal to the <strong>Target Technology Level</strong>.</p>
+    <p><strong>Example:</strong> To research Weapon Power Level 4, you must spend <strong>4 Crystals</strong>.</p>
+        
+    <div class="subheader">Regenerate Shields (Fighters Only):</div>
+    <p>The ship recovers 1 charge per level of Shield Regeneration tech (multiplied by 2 for Heavy Fighters), up to its maximum capacity. No dice are required.</p>
+        
+    <div class="subheader">Populate / Colonize:</div>
+    <ul>
+        <li><strong>Populate Colony Ship:</strong> Use this action at a planet you control to fill a Colony Ship with colonists. Update your ledger.</li>
+        <li><strong>Colonize Planet:</strong> While a populated Colony Ship is at an unpopulated planet, use this action to claim it. The planet becomes <strong>Populated and Owned</strong>; the ship becomes <strong>Unpopulated</strong>. Update the map and both ledgers.</li>
+    </ul>
+        
+    <div class="subheader">Attack a Ship:</div>
+    <p>Target an adjacent enemy ship. Your Attack Strength is the <strong>lower</strong> value between a <strong>d20 roll</strong> and your <strong>Modified Weapon Power</strong> (Small: 0.5x, Medium: 1x, Large: 2x).</p>
+    <p><strong>Example:</strong> A Large ship with Weapon Power 6 (Modified to 12) rolls a <strong>5</strong>. The Attack Strength is <strong>5</strong>. Damage hits Shields first, then Hull.</p>
+        
+    <div class="subheader">Bombard a Planet (Planetary Assault Ships Only):</div>
+    <p>Target an adjacent enemy planet. The success threshold is <strong>20 minus your Bombardment Effectiveness level</strong>. A success destroys one facility; if no facilities remain, the planet becomes unpopulated. <strong>Resources stored on the planet always remain, even if the planet becomes unpopulated or facilities are destroyed.</strong></p>
+    <p><strong>Example:</strong> With Level 4 Effectiveness, you need a 16 (20 - 4) or higher on a d20. Success destroys a facility or clears the population.</p>
+</div>
+
+<div class="section Legend">Map Symbology:
+    <div class="subheader">Empty Space:</div>
+    <p>A large <strong>X</strong> filling the cell.</p>
+
+    <div class="subheader">Star:</div>
+    <p>A medium-sized, solid <strong>Filled Dot</strong>.</p>
+
+    <div class="subheader">Planet:</div>
+    <p>A large open <strong>Circle</strong>. Use the surrounding corners for identifiers:</p>
+    <ul>
+        <li><strong>Top-Right Corner:</strong> Planet ID number (Permanent).</li>
+        <li><strong>Top-Left Corner:</strong> Faction Identifier (Erasable, added when populated).</li>
+    </ul>
+
+    
+    
+    <div class="subheader">Planetary Facilities:</div>
+    <p>Facilities are drawn <strong>inside</strong> the planet's circle. Leave room for both if necessary:</p>
+    <ul>
+        <li><strong>Shipyard:</strong> A capital <strong>S</strong>.</li>
+        <li><strong>Research Facility:</strong> A capital <strong>R</strong>.</li>
+    </ul>
+
+    <div class="subheader">Asteroid Fields:</div>
+    <div class="subheader sub2">Ore Field:</div>
+    <p>A medium-sized empty <strong>Square</strong>, representing a dense block of raw material.</p>
+    
+    <div class="subheader sub2">Crystal Field:</div>
+    <p>A medium-sized empty <strong>Triangle</strong>, representing a sharp, jagged crystal shard.</p>
+</div>
+
+
+<div class="section Exploration">Space Exploration Chart:
+    <p>Roll a <strong>d20</strong> and consult the chart below to determine what the Scout has discovered. Remember: If a <strong>Star</strong> is revealed, the Scout must "bounce" one space into previously explored space.</p>
+    
+    <table style="width:100%; border-collapse: collapse; margin-top: 10px;">
+        <tr style="background-color: #333; color: white;">
+            <th style="padding: 10px; border: 1px solid #555; text-align: center; width: 1%; white-space: nowrap;">Roll</th>
+            <th style="padding: 10px 15px; border: 1px solid #555; text-align: left;">Result</th>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: center; white-space: nowrap;"><strong>1-4</strong></td>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: left;">If adjacent to a star: <strong>Planet</strong>. Otherwise: <strong>Empty Space</strong>.</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: center; background-color: #222; white-space: nowrap;"><strong>5-8</strong></td>
+            <td style="padding: 10px 15px; border: 1px solid #555; background-color: #222; text-align: left;">If adjacent to a star: <strong>Empty Space</strong>. Otherwise: <strong>Star</strong>.</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: center; white-space: nowrap;"><strong>9-12</strong></td>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: left;">If adjacent to a star: <strong>Empty Space</strong>. Otherwise: <strong>Ore Asteroid Field</strong>.</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: center; background-color: #222; white-space: nowrap;"><strong>13-16</strong></td>
+            <td style="padding: 10px 15px; border: 1px solid #555; background-color: #222; text-align: left;">If adjacent to a star: <strong>Empty Space</strong>. Otherwise: <strong>Crystal Asteroid Field</strong>.</td>
+        </tr>
+        <tr>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: center; white-space: nowrap;"><strong>17-20</strong></td>
+            <td style="padding: 10px 15px; border: 1px solid #555; text-align: left;"><strong>Empty Space</strong>.</td>
+        </tr>
+    </table>
+</div>
+</div>
+</body>
+</html>
